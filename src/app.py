@@ -201,11 +201,12 @@ def read_sheet_names(contents, filename):
     
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
+        data = io.BytesIO(decoded)
         
         if 'xlsx' in filename:
             # Assume an excel file has bee chosen
             try:
-                df_dict = pd.ExcelFile(io.BytesIO(decoded))
+                df_dict = pd.ExcelFile(data)
                 sheet_names = df_dict.sheet_names
                 return_string = 'All Good'
             except:
