@@ -14,6 +14,12 @@ import pandas as pd
 import numpy as np
 import math
 
+import pickle
+
+def save_object(obj, filename):
+    with open(filename, 'wb') as outp:  # Overwrites any existing file.
+        pickle.dump(obj, outp, pickle.HIGHEST_PROTOCOL)
+
 
 #-----------------------------------------------#
 #             Define AgeDating Class            #
@@ -198,7 +204,7 @@ def read_sheet_names(contents, filename):
     return_string='Content is none'
     
     if contents is not None:
-    
+        # save_object(contents, 'company1.pkl')
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
         data = io.BytesIO(decoded)
@@ -207,7 +213,7 @@ def read_sheet_names(contents, filename):
         if 'xlsx' in filename:
             # Assume an excel file has bee chosen
             try:
-                df_dict = pd.ExcelFile(data)
+                df_dict = pd.read_Excel(data)
                 # sheet_names = df_dict.sheet_names
                 return_string = 'All Good'
             except:
