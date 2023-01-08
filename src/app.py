@@ -213,7 +213,7 @@ def read_sheet_names(contents, filename):
         if 'xlsx' in filename:
             # Assume an excel file has bee chosen
             try:
-                df_dict = pd.read_Excel(data)
+                df_dict = pd.read_excel(data)
                 # sheet_names = df_dict.sheet_names
                 return_string = 'All Good'
             except:
