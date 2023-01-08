@@ -193,38 +193,27 @@ def read_sheet_names(contents, filename):
     filename: name of the chosen file 
     content: content of that file
     """
-    
-    if contents is None:
-        
-        sheet_names = []
-        return_string='Content is none'
+
+    sheet_names = []
+    return_string='Content is none'
     
     if contents is not None:
     
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
         
-        try:
-            if 'xlsx' in filename:
-                # Assume an excel file has bee chosen
+        if 'xlsx' in filename:
+            # Assume an excel file has bee chosen
+            try:
                 df_dict = pd.ExcelFile(io.BytesIO(decoded))
                 sheet_names = df_dict.sheet_names
-                return_string = ''
-                
-            else:
-                return_string= 'Not an excel file!!'
+                return_string = 'All Good'
+            except:
+                return_string = 'Can not open but it is an Excel'
 
-        except:
-            return_string= 'Not able to read it!!'
-            sheet_names = []
-            
-        # return return_string, sheet_names, sheet_names
-    
-    # else:
-        
-    #     sheet_names = []
-    #     return_string='Content is none'
-        
+        else:
+            return_string= 'Not an excel file!!'
+
     return return_string, sheet_names, sheet_names
 
 
