@@ -25,6 +25,7 @@ from MEM import MEM
 
 app = dash.Dash(__name__)
 server = app.server
+# https://www.youtube.com/watch?v=XWJBJoV5yww
 
 #-----------------------------------------------#
 #               Define the Layout               #
@@ -744,12 +745,12 @@ def create_MEM(rows_guess, rows_menu, columns_guess, columns_menu,
             fig_ERC=None
             graph_Style_ERC = dict(display='none')
 
-    # else:
+    else:
         
-        # fig_fit=None
-        # fig_ERC=None
-        # graph_Style_fit = dict(display='none')
-        # graph_Style_ERC = dict(display='none')
+        fig_fit=None
+        fig_ERC=None
+        graph_Style_fit = dict(display='none')
+        graph_Style_ERC = dict(display='none')
     
     return fig_fit, graph_Style_fit, fig_ERC, graph_Style_ERC
 
