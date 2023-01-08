@@ -14,9 +14,12 @@ import pandas as pd
 import numpy as np
 import math
 
-# Import the AgeDating Class
 
-from MEM import MEM
+#-----------------------------------------------#
+#             Define AgeDating Class            #
+#-----------------------------------------------# 
+
+# from MEM import MEM
 
 
 #-----------------------------------------------#
