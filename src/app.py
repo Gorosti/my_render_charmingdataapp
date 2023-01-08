@@ -214,7 +214,7 @@ def read_sheet_names(contents, filename):
     else:
         
         sheet_names = []
-        return_string=''
+        return_string='Content is none'
         
     return return_string, sheet_names, sheet_names
 
