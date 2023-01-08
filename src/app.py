@@ -194,6 +194,11 @@ def read_sheet_names(contents, filename):
     content: content of that file
     """
     
+    if contents is None:
+        
+        sheet_names = []
+        return_string='Content is none'
+    
     if contents is not None:
     
         content_type, content_string = contents.split(',')
@@ -211,10 +216,14 @@ def read_sheet_names(contents, filename):
 
         except:
             return_string= 'Not able to read it!!'
-    else:
+            sheet_names = []
+            
+        # return return_string, sheet_names, sheet_names
+    
+    # else:
         
-        sheet_names = []
-        return_string='Content is none'
+    #     sheet_names = []
+    #     return_string='Content is none'
         
     return return_string, sheet_names, sheet_names
 
