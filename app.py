@@ -1024,5 +1024,5 @@ def read_sheet_names(contents, filename):
 #     return fig_fit, graph_Style_fit, figure_ERC, graph_Style_ERC, string_out
 
 
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run_server(debug=True)
