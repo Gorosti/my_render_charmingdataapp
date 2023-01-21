@@ -1,233 +1,233 @@
 
-# import base64
-# import io
+import base64
+import io
 
-# import dash
-# from dash.dependencies import Input, Output, State
-# from dash import dcc, html, dash_table
-# from dash.dash_table.Format import Format, Scheme, Symbol
+import dash
+from dash.dependencies import Input, Output, State
+from dash import dcc, html, dash_table
+from dash.dash_table.Format import Format, Scheme, Symbol
 
-# import plotly.graph_objs as go
-# from collections import OrderedDict
+import plotly.graph_objs as go
+from collections import OrderedDict
 
-# import pandas as pd
-# import numpy as np
-# import math
-# import gc
+import pandas as pd
+import numpy as np
+import math
+import gc
 
-# # Import the AgeDating Class
+# Import the AgeDating Class
 
-# from MEM import MEM
+from MEM import MEM
 
 
 # #-----------------------------------------------#
 # #            Initialize the Dash App            #
 # #-----------------------------------------------#  
 
-# app = dash.Dash(__name__)
-# server = app.server
+app = dash.Dash(__name__)
+server = app.server
 
 # #-----------------------------------------------#
 # #               Define the Layout               #
 # #-----------------------------------------------#  
 
-# app.layout = html.Div([
+app.layout = html.Div([
     
-#     html.Div(children=[
+    html.Div(children=[
 
-#         ### Upload Button for the data file ###
-#         dcc.Upload(id='upload-data',            
-#                    children=html.Button('Select Files')),
+        ### Upload Button for the data file ###
+        dcc.Upload(id='upload-data',            
+                    children=html.Button('Select Files')),
         
-#         html.Div(id='upload-text-output'),
+        html.Div(id='upload-text-output'),
         
-#         html.Br(),
-#         ### Checklist for selecting the sheet names ###
-#         dcc.Checklist(id='sheet-checklist'),
-#         html.Br(),
-#         ### Material selection ###
-#         dcc.Dropdown(id='material-dropdown',
-#                      style = dict(display='none'),
-#                      options={
-#                         'F' : 'Feldspar',
-#                         'Q'   : 'Quartz'
-#                    },
-#                    value='F'
-#         ),
+        html.Br(),
+        ### Checklist for selecting the sheet names ###
+        dcc.Checklist(id='sheet-checklist'),
+        html.Br(),
+        ### Material selection ###
+        dcc.Dropdown(id='material-dropdown',
+                      style = dict(display='none'),
+                      options={
+                        'F' : 'Feldspar',
+                        'Q'   : 'Quartz'
+                    },
+                    value='F'
+        ),
         
-#         html.Br(),
+        html.Br(),
         
-#         ### Table menu ###
-#         dash_table.DataTable(id='option-menu',
-#                              editable=True),
+        ### Table menu ###
+        dash_table.DataTable(id='option-menu',
+                              editable=True),
         
-#         dcc.Loading(
-#             id="loading-1",
-#             children=[dcc.Graph(id='fit-graph',
-#                       style = dict(display='none'))],
-#             type="circle"
-#             ),
+        dcc.Loading(
+            id="loading-1",
+            children=[dcc.Graph(id='fit-graph',
+                      style = dict(display='none'))],
+            type="circle"
+            ),
         
-#         # dcc.Graph(id='fit-graph',
-#         #           style = dict(display='none')),
+        # dcc.Graph(id='fit-graph',
+        #           style = dict(display='none')),
         
-#     ], style={'padding': 10, 
-#               'flex': 1,
-#               "width": "20%"}),
+    ], style={'padding': 10, 
+              'flex': 1,
+              "width": "20%"}),
               
     
-#     html.Div(children=[
+    html.Div(children=[
 
         
-#     ], style={'padding': 10, 'flex': 1}),
+    ], style={'padding': 10, 'flex': 1}),
     
-#     ### Accept button ###
-#     # html.Button('Accept',
-#     #             id='accept-menu-button',
-#     #             n_clicks=0,
-#     #             style = dict(display='none')),
+    ### Accept button ###
+    # html.Button('Accept',
+    #             id='accept-menu-button',
+    #             n_clicks=0,
+    #             style = dict(display='none')),
     
-#     ### Guess Plot ### 
-#     html.Div(children=[
+    ### Guess Plot ### 
+    html.Div(children=[
         
-#         html.Div(id='radio-container', children=[
+        html.Div(id='radio-container', children=[
            
-#             dcc.RadioItems(id='radio-guess',
-#                            inline=True),
+            dcc.RadioItems(id='radio-guess',
+                            inline=True),
             
-#             html.Br(),
+            html.Br(),
             
-#             html.Div(
-#             [
+            html.Div(
+            [
                 
-#                 html.Div(id='order-container', children=[
+                html.Div(id='order-container', children=[
                     
-#                     html.I("Order of the Model"),
+                    html.I("Order of the Model"),
                     
-#                     html.Br(),
-#                     dcc.Input(id="input-order", 
-#                               type="number",
-#                               value=2.1,
-#                               min=1,
-#                               max=10,
-#                               placeholder="",
-#                               style={'marginRight':'10px'}),
-#                 ],),
+                    html.Br(),
+                    dcc.Input(id="input-order", 
+                              type="number",
+                              value=2.1,
+                              min=1,
+                              max=10,
+                              placeholder="",
+                              style={'marginRight':'10px'}),
+                ],),
                 
-#                 html.Div(id='mu-container', children=[
+                html.Div(id='mu-container', children=[
                     
-#                     html.I("Mu"),
-#                     html.Br(),
-#                     dcc.Input(id="input-mu", 
-#                               type="number",
-#                               value=1.38,
-#                               min=1e-6,
-#                               max=1e6,
-#                               placeholder="",
-#                               style={'marginRight':'10px'}),
-#                 ],),
-#             ], style={'display': 'flex', 'flex-direction': 'row'}),
+                    html.I("Mu"),
+                    html.Br(),
+                    dcc.Input(id="input-mu", 
+                              type="number",
+                              value=1.38,
+                              min=1e-6,
+                              max=1e6,
+                              placeholder="",
+                              style={'marginRight':'10px'}),
+                ],),
+            ], style={'display': 'flex', 'flex-direction': 'row'}),
             
-#         ], style= {'display': 'none'}),
+        ], style= {'display': 'none'}),
 
         
-#         html.Div(children=[
+        html.Div(children=[
             
-#             html.Div(id='k1_slider-container', children=[
+            html.Div(id='k1_slider-container', children=[
             
-#                 dcc.Slider(id='k1_slider',
-#                            marks={
-#                                0:{'label': '0'},
-#                                0.99:{'label':'K1'}
-#                                },
-#                            tooltip={"placement": "right"},
-#                            min=0, 
-#                            max=0.99,
-#                            value=0.5,
-#                            included=False,
-#                            vertical=True
-#                 ),
-#             ], style= {'display': 'none'}),
+                dcc.Slider(id='k1_slider',
+                            marks={
+                                0:{'label': '0'},
+                                0.99:{'label':'K1'}
+                                },
+                            tooltip={"placement": "right"},
+                            min=0, 
+                            max=0.99,
+                            value=0.5,
+                            included=False,
+                            vertical=True
+                ),
+            ], style= {'display': 'none'}),
             
-#             html.Div(id='k2_slider-container', children=[
+            html.Div(id='k2_slider-container', children=[
             
-#                 dcc.Slider(id='k2_slider',
-#                            marks={
-#                                0:{'label': '0'},
-#                                0.99:{'label':'K2'}
-#                                },
-#                            tooltip={"placement": "right"},
-#                            min=0, 
-#                            max=0.99,
-#                            value=0.1,
-#                            included=False,
-#                            vertical=True
-#                 ),
-#             ], style= {'display': 'none'}),
+                dcc.Slider(id='k2_slider',
+                            marks={
+                                0:{'label': '0'},
+                                0.99:{'label':'K2'}
+                                },
+                            tooltip={"placement": "right"},
+                            min=0, 
+                            max=0.99,
+                            value=0.1,
+                            included=False,
+                            vertical=True
+                ),
+            ], style= {'display': 'none'}),
     
-#             dcc.Graph(id='guess-graph',
-#                       style = dict(display='none')),
+            dcc.Graph(id='guess-graph',
+                      style = dict(display='none')),
             
-#         ], style={'display': 'flex', 'flex-direction': 'row'}),
+        ], style={'display': 'flex', 'flex-direction': 'row'}),
         
-#         # Create Div to place a conditionally visible element inside
-#         html.Div(id='x1_slider-container', children=[
+        # Create Div to place a conditionally visible element inside
+        html.Div(id='x1_slider-container', children=[
         
-#             dcc.Slider(id='x1_slider',
-#                        min=0, 
-#                        max=100,
-#                        value=65,
-#                        tooltip={"placement": "right"},
-#                        included=False
-#             ),
-#         ], style= {'display': 'none'}),
+            dcc.Slider(id='x1_slider',
+                        min=0, 
+                        max=100,
+                        value=65,
+                        tooltip={"placement": "right"},
+                        included=False
+            ),
+        ], style= {'display': 'none'}),
         
         
-#         html.Div(id='x2_slider-container', children=[
+        html.Div(id='x2_slider-container', children=[
         
-#             dcc.Slider(id='x2_slider',
-#                        min=0, 
-#                        max=100,
-#                        value=0,
-#                        tooltip={"placement": "right"},
-#                        included=False
-#             ),
-#         ], style= {'display': 'none'}),
+            dcc.Slider(id='x2_slider',
+                        min=0, 
+                        max=100,
+                        value=0,
+                        tooltip={"placement": "right"},
+                        included=False
+            ),
+        ], style= {'display': 'none'}),
         
-#         html.Div(id='x3_slider-container', children=[
+        html.Div(id='x3_slider-container', children=[
         
-#             dcc.Slider(id='x3_slider',
-#                        min=0, 
-#                        max=100,
-#                        value=0,
-#                        tooltip={"placement": "right"},
-#                        included=False
-#             ),
-#         ], style= {'display': 'none'}),
+            dcc.Slider(id='x3_slider',
+                        min=0, 
+                        max=100,
+                        value=0,
+                        tooltip={"placement": "right"},
+                        included=False
+            ),
+        ], style= {'display': 'none'}),
         
-#         html.Div(id='table-container', children=[
+        html.Div(id='table-container', children=[
         
-#             dash_table.DataTable(id='guess-modified',
-#                                  data=None,
-#                                  columns=None),
+            dash_table.DataTable(id='guess-modified',
+                                  data=None,
+                                  columns=None),
 
-#         ], style= {'display': 'none'}),
+        ], style= {'display': 'none'}),
         
-#         dcc.Loading(
-#             id="loading-1",
-#             children=[dcc.Graph(id='ERC-graph',
-#                       style = dict(display='none'))],
-#             type="circle"
-#             ),
+        dcc.Loading(
+            id="loading-1",
+            children=[dcc.Graph(id='ERC-graph',
+                      style = dict(display='none'))],
+            type="circle"
+            ),
         
-#     ], style={'padding': 10, 
-#               'flex': 1,
-#               "width": "20%"}),
+    ], style={'padding': 10, 
+              'flex': 1,
+              "width": "20%"}),
               
-#         html.Div(id='some-out'),
+        html.Div(id='some-out'),
     
 
-# ], style={'display': 'flex', 'flex-direction': 'row'})
+], style={'display': 'flex', 'flex-direction': 'row'})
 
               
               
@@ -238,46 +238,47 @@
 # #-----------------------------------------------#  
 
 
-# @app.callback(
-#     Output('upload-text-output', 'children'),
-#     Output('sheet-checklist', 'options'),
-#     Output('sheet-checklist', 'value'),
-#     Output('material-dropdown', 'style'),
-#     Input('upload-data', 'contents'),
-#     State('upload-data', 'filename')
-# )
-# def read_sheet_names(contents, filename):
+@app.callback(
+    Output('upload-text-output', 'children'),
+    Output('sheet-checklist', 'options'),
+    Output('sheet-checklist', 'value'),
+    Output('material-dropdown', 'style'),
+    Input('upload-data', 'contents'),
+    State('upload-data', 'filename'),
+)
+def read_sheet_names(contents, filename):
     
-#     """
-#     filename: name of the chosen file 
-#     content: content of that file
-#     """
+    """
+    filename: name of the chosen file 
+    content: content of that file
+    """
     
-#     if contents is not None:
+    if contents is not None:
     
-#         content_type, content_string = contents.split(',')
-#         decoded = base64.b64decode(content_string)
+        content_type, content_string = contents.split(',')
+        decoded = base64.b64decode(content_string)
         
-#         try:
-#             if 'xlsx' in filename:
-#                 # Assume an excel file has bee chosen
-#                 df_dict = pd.ExcelFile(io.BytesIO(decoded))
-#                 sheet_names = df_dict.sheet_names
-#                 return_string = ''
-#                 style=dict()
+        try:
+            if 'xlsx' in filename:
+                # Assume an excel file has bee chosen
+                df_dict = pd.ExcelFile(io.BytesIO(decoded))
+                sheet_names = df_dict.sheet_names
+                return_string = ''
+                style=dict()
+                return_string = 'Excel detected' + content_string
                 
-#             else:
-#                 return_string= 'Not an excel file!!'
+            else:
+                return_string= 'Not an excel file!!'
 
-#         except:
-#             return_string= 'Not able to read it!!'
-#     else:
+        except:
+            return_string= 'Not able to read it!!'
+    else:
         
-#         sheet_names = []
-#         return_string=''
-#         style = dict(display='none')
+        sheet_names = []
+        return_string=''
+        style = dict(display='none')
         
-#     return return_string, sheet_names, sheet_names, style
+    return return_string, sheet_names, sheet_names, style
 
 
 # @app.callback(
