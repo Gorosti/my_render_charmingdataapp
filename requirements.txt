@@ -7,3 +7,4 @@ scipy==1.10.0
 uncertainties==3.1.7
 gunicorn
 dash-tools
+openpyxel
