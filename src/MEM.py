@@ -781,8 +781,6 @@ class MEM():
         
     def confidence_bands_array(self,logID, model_idx,PlotPredictionBands,PlotPrev,Site_idx,Thickness):
         
-        fig, (ax2) = plt.subplots()
-        
         plotly_content_fit = []
 
         for i in range(len(self.xall)):
@@ -854,17 +852,24 @@ class MEM():
                 xfit = px
                 xdata =self.xall[i]
                 x_wellBleach = self.x_WB[i]
+                
+                
+            ### Start Matplotlib ###
             
+            # fig, (ax2) = plt.subplots()
            
-            plt.plot(xfit, nom, c='black', label='fit')
-            plt.errorbar(xdata, self.yall[i], self.errall[i], ls='',
-                         marker = 'o', c = 'black',
-                         markerfacecolor  = 'white', zorder = 100)
+            # plt.plot(xfit, nom, c='black', label='fit')
+            # plt.errorbar(xdata, self.yall[i], self.errall[i], ls='',
+            #              marker = 'o', c = 'black',
+            #              markerfacecolor  = 'white', zorder = 100)
 
-            # uncertainty lines (95% confidence)
-            plt.plot(xfit, nom - 1.96 * std, c='orange',\
-                 label='95% Confidence Region')
-            plt.plot(xfit, nom + 1.96 * std, c='orange')
+            # # uncertainty lines (95% confidence)
+            # plt.plot(xfit, nom - 1.96 * std, c='orange',\
+            #      label='95% Confidence Region')
+            # plt.plot(xfit, nom + 1.96 * std, c='orange')
+            
+            ### End Matplotlib ###
+            
             
             ### For Plotly ###
             
@@ -876,6 +881,7 @@ class MEM():
                                                      line=dict(color='black'),
                                                      mode='lines',
                                                      showlegend = True,
+                                                     legendgroup="Fit",
                                                      name = 'Fitted Model'))
                 
                 plotly_content_fit.append(go.Scatter(
@@ -884,6 +890,16 @@ class MEM():
                                                      line=dict(color='orange'),
                                                      mode='lines',
                                                      showlegend = True,
+                                                     legendgroup="FIT+-",
+                                                     name = '95% Confidence Region'))
+                
+                plotly_content_fit.append(go.Scatter(
+                                                     x= xfit,
+                                                     y= nom + 1.96 * std,
+                                                     line=dict(color='orange'),
+                                                     mode='lines',
+                                                     showlegend = False,
+                                                     legendgroup="FIT+-",
                                                      name = '95% Confidence Region'))
                 
                 plotly_content_fit.append(go.Scatter(
@@ -898,6 +914,7 @@ class MEM():
                                                marker_symbol='circle',
                                                marker_color = 'black',
                                                showlegend = True,
+                                               legendgroup="Data",
                                                name = 'Data'))
                 
             else:
@@ -908,21 +925,24 @@ class MEM():
                                                      y= nom,
                                                      line=dict(color='black'),
                                                      mode='lines',
-                                                     showlegend = False))
+                                                     showlegend = False,
+                                                     legendgroup="Fit",))
                 
                 plotly_content_fit.append(go.Scatter(
                                                      x= xfit,
                                                      y= nom - 1.96 * std,
                                                      line=dict(color='orange'),
                                                      mode='lines',
-                                                     showlegend = False))
+                                                     showlegend = False,
+                                                     legendgroup="FIT+-",))
                 
                 plotly_content_fit.append(go.Scatter(
                                                      x= xfit,
                                                      y= nom + 1.96 * std,
                                                      line=dict(color='orange'),
                                                      mode='lines',
-                                                     showlegend = False))
+                                                     showlegend = False,
+                                                     legendgroup="FIT+-"))
                 
                 plotly_content_fit.append(go.Scatter(
                                                x=xdata,
@@ -935,7 +955,8 @@ class MEM():
                                                mode='markers',
                                                marker_symbol='circle',
                                                marker_color = 'black',
-                                               showlegend = False))
+                                               showlegend = False,
+                                               legendgroup="Data"))
                 
             layout = go.Layout(paper_bgcolor='rgba(0,0,0,0)',
                                plot_bgcolor='rgba(0,0,0,0)',
@@ -950,44 +971,44 @@ class MEM():
             
             ### End Plotly ###
 
-            if PlotPredictionBands =='y':
-                # prediction band (95% confidence)
-                plt.plot(xfit, lpb, 'k--',label='95% Prediction Band')
-                plt.plot(xfit, upb, 'k--')
+            # if PlotPredictionBands =='y':
+            #     # prediction band (95% confidence)
+            #     plt.plot(xfit, lpb, 'k--',label='95% Prediction Band')
+            #     plt.plot(xfit, upb, 'k--')
             
-            plt.ylabel('y')
-            plt.xlabel('x')
-            #plt.legend(loc='best')
+            # plt.ylabel('y')
+            # plt.xlabel('x')
+            # #plt.legend(loc='best')
             
-            if PlotPrev =='yes':
-                if event >=2:
-                    plt.plot(xfit, nom_prev1, c='red', label='fit')
-                if event >=3:
-                    plt.plot(xfit, nom_prev2, c='blue', label='fit')    
-                if event >=4:
-                    plt.plot(xfit, nom_prev3, c='green', label='fit')
+            # if PlotPrev =='yes':
+            #     if event >=2:
+            #         plt.plot(xfit, nom_prev1, c='red', label='fit')
+            #     if event >=3:
+            #         plt.plot(xfit, nom_prev2, c='blue', label='fit')    
+            #     if event >=4:
+            #         plt.plot(xfit, nom_prev3, c='green', label='fit')
 
-            #Plot well bleached depth
-            if event==2:
-                plt.plot((x_wellBleach[0], x_wellBleach[0]), (nom[0]-0.2,nom[0]+0.2), 'k-')
-            if event>2:
-                plt.plot((x_wellBleach[0], x_wellBleach[0]), (nom_prev2[0]-0.2,nom_prev2[0]+0.2), 'k-')
-            if event>=3:
-                plt.plot((x_wellBleach[1], x_wellBleach[1]), (nom_prev2[0]-0.2,nom_prev2[0]+0.2), 'k-')
-            if event>=4:
-                plt.plot((x_wellBleach[2], x_wellBleach[2]), (nom[0]-0.2,nom[0]+0.2), 'k-')
-            if event>=5:
-                plt.plot((x_wellBleach[3], x_wellBleach[3]), (nom_prev2[0]-0.2,nom_prev2[0]+0.2), 'k-')
+            # #Plot well bleached depth
+            # if event==2:
+            #     plt.plot((x_wellBleach[0], x_wellBleach[0]), (nom[0]-0.2,nom[0]+0.2), 'k-')
+            # if event>2:
+            #     plt.plot((x_wellBleach[0], x_wellBleach[0]), (nom_prev2[0]-0.2,nom_prev2[0]+0.2), 'k-')
+            # if event>=3:
+            #     plt.plot((x_wellBleach[1], x_wellBleach[1]), (nom_prev2[0]-0.2,nom_prev2[0]+0.2), 'k-')
+            # if event>=4:
+            #     plt.plot((x_wellBleach[2], x_wellBleach[2]), (nom[0]-0.2,nom[0]+0.2), 'k-')
+            # if event>=5:
+            #     plt.plot((x_wellBleach[3], x_wellBleach[3]), (nom_prev2[0]-0.2,nom_prev2[0]+0.2), 'k-')
                        
-            if event>= 2:
-                print("F*tb 1 =",self.popt[3])
-                print('Well bleached depths sample ' + str(i) + ':' + str(self.x_WB[i]))
-            if event>= 3:
-                print("sfte 2 =",self.popt[4])
-            if event>= 4:
-                print("F*tb 2 =",self.popt[5])
-            if event>= 5:
-                print("sfte 3 =",self.popt[6])
+            # if event>= 2:
+            #     print("F*tb 1 =",self.popt[3])
+            #     print('Well bleached depths sample ' + str(i) + ':' + str(self.x_WB[i]))
+            # if event>= 3:
+            #     print("sfte 2 =",self.popt[4])
+            # if event>= 4:
+            #     print("F*tb 2 =",self.popt[5])
+            # if event>= 5:
+            #     print("sfte 3 =",self.popt[6])
 
 
         # if logID == 'yes':
@@ -1047,6 +1068,9 @@ class MEM():
         xxpp_err = [xp_err_all[index],xp2_err_all[index2],xp3_err_all[index3]]
         KNOWN_AGE_LOG = [know_Age1_log,know_Age2_log,know_Age3_log]
         TIME_ERC = []
+        
+        figure_plotly = []
+        
         for k in range(0,3): 
             xp = xxpp[k]
             xp_err = xxpp_err[k]
@@ -1090,29 +1114,35 @@ class MEM():
             
   #####GOROS: This figure was moved to here and included in the loop of different exposure events##########
                 # Create the ERC figure
-                fig, ax1 = plt.subplots(figsize=(8, 8))
                 
-                ax1.plot(10**tt, nom - 1.96 * std, c='orange',\
-                         label='95% Confidence Region')
-                ax1.plot(10**tt, nom + 1.96 * std, c='orange')
-                ax1.plot(10**tt, nom, c='red')
-                ax1.errorbar(Time, xp, xp_err, ls='',
-                                 marker = 'o', c = 'black',
-                                 markerfacecolor  = 'white', zorder = 100)
-
-                for i in range(0,len(sheet_name)): #different profiles
-                        if np.isfinite(self.t_ERC[i]):
-                            x_points = np.array([tt[0], self.t_ERC[i][0], self.t_ERC[i][0]])
-                            y_points = np.array([xp_all[i], xp_all[i], 0])
-                            ax1.plot(x_points, y_points,'--')
-
-
-                ax1.set_xlabel('Exposure time')
-                ax1.set_ylabel('inflection point [mm]')
-                ax1.set_xscale('log')        
-                ax1.set_xlim([10**tt[0]/5,10**tt[-1]*5])
-                ax1.set_ylim(bottom=0)
-                plt.title('ERC curve from exposure no. {}'.format(k+1))
+                ### For Matplot ###
+                
+                # fig, ax1 = plt.subplots(figsize=(8, 8))
+                
+                # ax1.plot(10**tt, nom - 1.96 * std, c='orange',\
+                #          label='95% Confidence Region')
+                # ax1.plot(10**tt, nom + 1.96 * std, c='orange')
+                # ax1.plot(10**tt, nom, c='red')
+                # ax1.errorbar(Time, xp, xp_err, ls='',
+                #                  marker = 'o', c = 'black',
+                #                  markerfacecolor  = 'white', zorder = 100)
+    
+                # for i in range(0,len(sheet_name)): #different profiles
+                #         if np.isfinite(self.t_ERC[i]):
+                #             x_points = np.array([tt[0], self.t_ERC[i][0], self.t_ERC[i][0]])
+                #             y_points = np.array([xp_all[i], xp_all[i], 0])
+                #             ax1.plot(x_points, y_points,'--')
+    
+    
+                # ax1.set_xlabel('Exposure time')
+                # ax1.set_ylabel('inflection point [mm]')
+                # ax1.set_xscale('log')        
+                # ax1.set_xlim([10**tt[0]/5,10**tt[-1]*5])
+                # ax1.set_ylim(bottom=0)
+                # plt.title('ERC curve from exposure no. {}'.format(k+1))
+                
+                
+                ### End Matplotlib ###
                 
                 
                 ### For Plotly ###
@@ -1177,14 +1207,18 @@ class MEM():
                                    height=500,
                                    width=500)
                 
-                self.plotly_fig_ERC = go.Figure(data=plotly_content_ERC,
+                plotly_fig_ERC = go.Figure(data=plotly_content_ERC,
                                                 layout=layout)
                 
-                self.plotly_fig_ERC.update_yaxes(range=[0, ax1.get_ylim()])
+                # plotly_fig_ERC.update_yaxes(range=[0, ax1.get_ylim()])
                 # self.plotly_fig_ERC.update_xaxes(range=[10**tt[0]/5, 10**tt[-1]*5])
-                self.plotly_fig_ERC.update_xaxes(type="log")
-      
+                plotly_fig_ERC.update_xaxes(type="log")
                 
+                figure_plotly.append(plotly_fig_ERC)
+                
+            self.plotly_fig_ERC = figure_plotly
+
+
                 ### End Plotly ###
                 
         self.TIME_ERC = TIME_ERC
@@ -1269,7 +1303,7 @@ class MEM():
                                 ax1.set_xlabel('Exposure time')
                                 #ax1.set_ylim([0,0.6])
                                 ax1.set_xlim([0,max(t_ERC_monteCarlo[i])*1.1])
-                                ax1.hist(t_ERC_monteCarlo[i], bins = 20, edgecolor='black', weights=np.ones_like(t_ERC_monteCarlo[i]) / len(t_ERC_monteCarlo[i]))
+                                ax1.hist(t_ERC_monteCarlo[i], bins=20, edgecolor='black', weights=np.ones_like(t_ERC_monteCarlo[i]) / len(t_ERC_monteCarlo[i]))
             
                 MEAN_t_ERC.append(mean_t_ERC)
                 SD_t_ERC.append(sd_t_ERC)
@@ -1316,3 +1350,4 @@ class MEM():
         self.confidence_bands_array(logID,model_idx,PlotPredictionBands,PlotPrev,Site_idx,Thickness)
         self.SingleCal(sheet_name,model_idx,Known_exp_time1,Known_exp_time2, Known_exp_time3)
         self.ERC(Known_exp_time1,Known_exp_time2,Known_exp_time3,sheet_name,model_idx)
+        
