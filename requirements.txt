@@ -1,10 +1,10 @@
-dash==2.7.1
+dash
 matplotlib
 numpy
-pandas==1.5.1
-pip==22.3.1
-scipy==1.10.0
-uncertainties==3.1.7
+pandas
+pip
+scipy
+uncertainties
 gunicorn
 dash-tools
 openpyxl
